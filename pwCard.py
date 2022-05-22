@@ -2,44 +2,45 @@ from random import randrange
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
    
-def plot(allTuples):
-    val1 = ['ABC', 'DEF', 'GHI', 'JKL', 'MNO', 'PQR', 'STU', 'VWX', 'YZ'] 
-    val2 = ["  {:X}  ".format(i) for i in range(1, 10)] 
-    val3 = [[],[],[],[],[],[],[],[],[]]
-    i, j = 0, 3
-    for c in range(9):
-        for r in range(9):
-            val3[c].append(allTuples[i:j])
-            i += 3
-            j += 3
-
-    fig, ax = plt.subplots() 
+def plot(col, row, cell):
+    fig, ax = plt.subplots(1, figsize=(3.5,3))
     ax.set_axis_off() 
-    table = ax.table( 
-        cellText = val3,  
-        rowLabels = val2,  
-        colLabels = val1, 
+    ax.table(
+        cellText = cell,  
+        rowLabels = row,  
+        colLabels = col, 
         rowColours =["palegreen"] * 9,  
         colColours =["palegreen"] * 9, 
         cellLoc ='center',  
         loc ='upper left') 
-    
     ax.set_title('Password Card', fontweight ="bold") 
     pdf = PdfPages('pwCard.pdf')
     pdf.savefig(fig)
     pdf.close()
-    plt.show() 
 
-def main():
+def fillCells(tuples):
+    col = ['ABC', 'DEF', 'GHI', 'JKL', 'MNO', 'PQR', 'STU', 'VWX', 'YZ'] 
+    row = []
+    for colNr in range(1, 10):
+        row.append(f"  {colNr}  ")
+    cell = []
+    for rowNr, colNr in enumerate(range(0,243,27)):
+        cell.append([])
+        for colIdx in range(0,27,3):
+            colIdx += colNr
+            cell[rowNr].append(tuples[colIdx:colIdx+3])
+    return col, row, cell
+
+def createTuples():
     symbols = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%1234567890'
-    allTuples = ''
-    for tuples in range(9*9):
-        rdmTuple = ''
-        for tuple in range(3):
-            rdmInt = randrange(0, len(symbols))
-            rdmSymb = symbols[rdmInt]
-            rdmTuple += rdmSymb
-        allTuples += rdmTuple
-    plot(allTuples)
-        
-main()
+    tuples = ''
+    for _ in range(9*9):
+        cellTuple = ''
+        for _ in range(3):
+            cellTuple += symbols[randrange(0, len(symbols))]
+        tuples += cellTuple
+    return tuples
+
+tuples = createTuples()
+col, row, cell = fillCells(tuples)
+plot(col, row, cell)
