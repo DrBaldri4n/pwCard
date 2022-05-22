@@ -21,8 +21,8 @@ def plot(col, row, cell):
 def fillCells(tuples):
     col = ['ABC', 'DEF', 'GHI', 'JKL', 'MNO', 'PQR', 'STU', 'VWX', 'YZ'] 
     row = []
-    for colNr in range(1, 10):
-        row.append(f"  {colNr}  ")
+    for rowNr in range(1, 10):
+        row.append(f"  {rowNr}  ")
     cell = []
     for rowNr, colNr in enumerate(range(0,243,27)):
         cell.append([])
